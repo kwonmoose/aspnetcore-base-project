@@ -1,13 +1,51 @@
+using System.Reflection;
 using application.Codes;
 using application.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region Serilog 설정
+
+builder.Host.UseSerilog();
+
+// Configuration
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+    .Build();
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.WithProperty("Application", Assembly.GetEntryAssembly().GetName().Name)
+    .Enrich.WithProperty("Version", Assembly.GetEntryAssembly().GetName().Version)
+    .ReadFrom.Configuration(configuration)
+    .CreateLogger();
+
+#endregion
+
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        // To preserve the default behavior, capture the original delegate to call later.
+        var builtInFactory = options.InvalidModelStateResponseFactory;
+
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+
+            // Perform logging here.
+            // ...
+
+            // Invoke the default behavior, which produces a ValidationProblemDetails response.
+            // To produce a custom response, return a different implementation of IActionResult instead.
+            return builtInFactory(context);
+        };
+    });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -56,7 +94,13 @@ app.UseAuthentication();
 // https://docs.microsoft.com/ko-kr/aspnet/core/security/authorization/introduction?view=aspnetcore-6.0
 app.UseAuthorization();
 
+#region API 라우팅
+
 app.MapControllers();
+
+app.MapGet("/minimal-api/get", () => "Minimal API!!");
+
+#endregion
 
 #region 상태 검사 엔드포인트 지정
 
