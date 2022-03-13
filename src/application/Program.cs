@@ -83,6 +83,9 @@ if (ServerEnvironmentCodes.IsLocal() || ServerEnvironmentCodes.IsDevelopment() |
     app.UseSwaggerUI();
 }
 
+// Serilog로 HTTP Request 로깅 
+app.UseSerilogRequestLogging();
+
 // CDN에서 http를 https로 리디렉션하기 때문에 주석 처리
 // app.UseHttpsRedirection();
 
