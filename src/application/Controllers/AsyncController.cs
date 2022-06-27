@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,43 +9,50 @@ namespace application.Controllers;
 [Route("async")]
 public class AsyncController : ControllerBase
 {
-    public AsyncController()
+    private readonly ILogger<AsyncController> _logger;
+    
+    public AsyncController(ILogger<AsyncController> logger)
     {
-        
+        _logger = logger;
     }
 
     [HttpGet]
     public async Task<ActionResult> GetMethod()
     {
-        for (int i = 0; i < 10000000000; i++)
+        var sw = new Stopwatch();
+        sw.Start();
+        for (int i = 0; i < 100000000000; i++)
         {
-            Console.WriteLine($"test-{i}");
+            _logger.LogDebug($"test-{i}");
         }
+        sw.Stop();
         
-        return Ok(null);
+        _logger.LogDebug($"StopWatch - {sw.ElapsedMilliseconds}ms");
+        
+        return Ok();
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult> GetDetailMethod([FromRoute] ulong id)
     {
-        return Ok(null);
+        return Ok();
     }
 
     [HttpPost]
     public async Task<IActionResult> PostMethod()
     {
-        return Ok(null);
+        return Ok();
     }
 
     [HttpPut]
     public async Task<IActionResult> PutMethod()
     {
-        return Ok(null);
+        return Ok();
     }
 
     [HttpDelete]
     public async Task<IActionResult> DeleteMethod()
     {
-        return Ok(null);
+        return Ok();
     }
 }
