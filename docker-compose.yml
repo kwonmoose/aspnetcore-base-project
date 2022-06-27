@@ -7,19 +7,20 @@ services:
       context: .
       dockerfile: src/application/Dockerfile
     ports:
-      - "24470:5000"
+      - "5000:5000"
     environment:
-      ASPNETCORE_ENVIRONMENT: local
+      ASPNETCORE_ENVIRONMENT: Local
+      ASPNETCORE_URLS: "http://*:5000"
     deploy:
       resources:
         limits:
-          cpus: '0.01'
+          cpus: '0.25'
           memory: 2gb
     volumes:
       - ./log:/var/log
-    links:
-      - redis
-    
-  redis:
-    image: redis
+#    links:
+#      - redis
+#    
+#  redis:
+#    image: redis
     

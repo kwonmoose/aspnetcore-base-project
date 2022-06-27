@@ -29,7 +29,7 @@ public class AsyncController : ControllerBase
         
         _logger.LogDebug($"StopWatch - {sw.ElapsedMilliseconds}ms");
         
-        return Ok();
+        return Ok("Get Async");
     }
 
     [HttpGet("{id}")]
