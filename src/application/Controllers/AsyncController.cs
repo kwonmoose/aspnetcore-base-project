@@ -16,6 +16,11 @@ public class AsyncController : ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetMethod()
     {
+        for (int i = 0; i < 10000000000; i++)
+        {
+            Console.WriteLine($"test-{i}");
+        }
+        
         return Ok(null);
     }
 

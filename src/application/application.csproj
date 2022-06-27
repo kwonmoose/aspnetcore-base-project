@@ -17,4 +17,8 @@
       <Folder Include="Services" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="docker-compose.yml" />
+    </ItemGroup>
+
 </Project>
