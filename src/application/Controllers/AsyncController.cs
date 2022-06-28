@@ -35,7 +35,7 @@ public class AsyncController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult> GetDetailMethod([FromRoute] ulong id)
     {
-        return Ok();
+        return Ok(id);
     }
 
     [HttpPost]

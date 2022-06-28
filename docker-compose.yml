@@ -5,7 +5,7 @@ services:
     image: aspnetcore-base-project
     build:
       context: .
-      dockerfile: src/application/Dockerfile
+      dockerfile: ./src/application/Dockerfile
     ports:
       - "5000:5000"
     environment:
@@ -18,9 +18,4 @@ services:
           memory: 2gb
     volumes:
       - ./log:/var/log
-#    links:
-#      - redis
-#    
-#  redis:
-#    image: redis
     
