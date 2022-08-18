@@ -1,8 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "application", "src\application\application.csproj", "{E6BB83BE-6DE0-42F3-B395-9A9A82204EC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{E6BB83BE-6DE0-42F3-B395-9A9A82204EC8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BD2E7E21-A837-4951-A59D-6A0454D771E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{34D504CB-E874-4ACC-9A6F-4D81D8871FD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{7A812C1B-590C-4090-B619-726EE41D9FD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,8 +18,18 @@ Global
 		{E6BB83BE-6DE0-42F3-B395-9A9A82204EC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6BB83BE-6DE0-42F3-B395-9A9A82204EC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6BB83BE-6DE0-42F3-B395-9A9A82204EC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34D504CB-E874-4ACC-9A6F-4D81D8871FD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34D504CB-E874-4ACC-9A6F-4D81D8871FD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34D504CB-E874-4ACC-9A6F-4D81D8871FD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34D504CB-E874-4ACC-9A6F-4D81D8871FD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A812C1B-590C-4090-B619-726EE41D9FD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A812C1B-590C-4090-B619-726EE41D9FD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A812C1B-590C-4090-B619-726EE41D9FD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A812C1B-590C-4090-B619-726EE41D9FD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E6BB83BE-6DE0-42F3-B395-9A9A82204EC8} = {BD2E7E21-A837-4951-A59D-6A0454D771E6}
+		{34D504CB-E874-4ACC-9A6F-4D81D8871FD3} = {BD2E7E21-A837-4951-A59D-6A0454D771E6}
+		{7A812C1B-590C-4090-B619-726EE41D9FD8} = {BD2E7E21-A837-4951-A59D-6A0454D771E6}
 	EndGlobalSection
 EndGlobal
