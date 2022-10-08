@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Net.Mime;
+using application.Models.Async.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace application.Controllers;
@@ -17,7 +18,7 @@ public class AsyncController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult> GetMethod()
+    public async Task<ActionResult> GetMethod([FromBody] GetMethodHttpRequest model)
     {
         var sw = new Stopwatch();
         sw.Start();

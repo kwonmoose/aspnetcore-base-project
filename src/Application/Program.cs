@@ -7,72 +7,9 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#region Serilog 설정
+builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Host.UseSerilog();
-
-// Configuration
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
-    .Build();
-
-Log.Logger = new LoggerConfiguration()
-    .Enrich.WithProperty("Application", Assembly.GetEntryAssembly().GetName().Name)
-    .Enrich.WithProperty("Version", Assembly.GetEntryAssembly().GetName().Version)
-    .ReadFrom.Configuration(configuration)
-    .CreateLogger();
-
-#endregion
-
-// Add services to the container.
-
-builder.Services.AddControllers()
-    .ConfigureApiBehaviorOptions(options =>
-    {
-        // To preserve the default behavior, capture the original delegate to call later.
-        var builtInFactory = options.InvalidModelStateResponseFactory;
-
-        options.InvalidModelStateResponseFactory = context =>
-        {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-
-            // Perform logging here.
-            // ...
-
-            // Invoke the default behavior, which produces a ValidationProblemDetails response.
-            // To produce a custom response, return a different implementation of IActionResult instead.
-            return builtInFactory(context);
-        };
-    });
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-#region 상태 검사 서비스 추가
-
-builder.Services.AddHealthChecks()
-    .AddCheck<TagsHealthCheck>(
-        "TagsHealthCheck",
-        // failureStatus: HealthStatus.Degraded,
-        tags: new[] { "tags" }
-    )
-    .AddCheck<SampleHealthCheck>(
-        "SampleHealthCheck",
-        tags: new[] { "sample" }
-    )
-    .AddCheck(
-        "Sample", 
-        () =>
-        {
-            Console.WriteLine($"LambdaHealthCheck - {Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
-            return HealthCheckResult.Healthy("A lambda healthy result");
-        }, 
-        tags: new [] {"lambda"}
-    );
-
-#endregion
 
 var app = builder.Build();
 
