@@ -1,6 +1,7 @@
 using System.Reflection;
 using application.Codes;
 using application.HealthChecks;
+using Infrastructure.Service.Di;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
@@ -10,6 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Host.UseSerilog();
+
+builder.Services.AddSingleton<SingletonService>();
+
+builder.Services.AddScoped<ScopedService>();
+
+builder.Services.AddTransient<TransientService>();
 
 var app = builder.Build();
 
