@@ -1,9 +1,6 @@
-using System.Reflection;
-using application.Codes;
-using application.HealthChecks;
+using Domain.Enums;
 using Infrastructure.Service.Di;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,9 +16,10 @@ builder.Services.AddScoped<ScopedService>();
 builder.Services.AddTransient<TransientService>();
 
 var app = builder.Build();
+var serverEnvironment = (ServerEnvironment)Enum.Parse(typeof(ServerEnvironment), app.Environment.EnvironmentName);
 
 // Configure the HTTP request pipeline.
-if (ServerEnvironmentCodes.IsLocal() || ServerEnvironmentCodes.IsDevelopment() || ServerEnvironmentCodes.IsQA())
+if (serverEnvironment.IsLocal() || serverEnvironment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -30,8 +28,7 @@ if (ServerEnvironmentCodes.IsLocal() || ServerEnvironmentCodes.IsDevelopment() |
 // Serilog로 HTTP Request 로깅 
 app.UseSerilogRequestLogging();
 
-// CDN에서 http를 https로 리디렉션하기 때문에 주석 처리
-// app.UseHttpsRedirection();
+#region 인증 설정
 
 // 인증 미들웨어 - 사용자를 인증하는 미들웨어
 // https://docs.microsoft.com/ko-kr/aspnet/core/security/authentication/?view=aspnetcore-6.0
@@ -41,13 +38,15 @@ app.UseAuthentication();
 // https://docs.microsoft.com/ko-kr/aspnet/core/security/authorization/introduction?view=aspnetcore-6.0
 app.UseAuthorization();
 
+#endregion
+
 #region API 라우팅
+
+app.MapControllerRoute(name: "Areas", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllers();
 
 app.MapGet("/minimal-api/get", () => "Minimal API!!");
-
-#endregion
 
 #region 상태 검사 엔드포인트 지정
 
@@ -71,6 +70,8 @@ app.MapHealthChecks("/health-check4", new HealthCheckOptions()
 {
     Predicate = healthCheck => healthCheck.Tags.Contains("lambda")
 });
+
+#endregion
 
 #endregion
 

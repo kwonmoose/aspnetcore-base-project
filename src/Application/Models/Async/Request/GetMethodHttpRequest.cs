@@ -1,4 +1,4 @@
-namespace application.Models.Async.Request;
+namespace application.Models.Async;
 
 public class GetMethodHttpRequest
 {

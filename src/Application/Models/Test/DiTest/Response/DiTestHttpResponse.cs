@@ -1,4 +1,4 @@
-namespace Microsoft.Extensions.DependencyInjection.Models.Test.Response;
+namespace application.Models.Test.DiTest;
 
 public class DiTestHttpResponse
 {

@@ -1,12 +1,13 @@
 using System.Diagnostics;
-using System.Net.Mime;
-using application.Models.Async.Request;
+using application.Models.Async;
 using Microsoft.AspNetCore.Mvc;
 
 namespace application.Controllers;
 
+/// <summary>
+/// 비동기 테스트 API? (미완성인거 같음)
+/// </summary>
 [ApiController]
-[Produces(MediaTypeNames.Application.Json)]
 [Route("async")]
 public class AsyncController : ControllerBase
 {

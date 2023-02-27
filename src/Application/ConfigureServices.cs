@@ -1,8 +1,10 @@
 
 using System.Reflection;
+using System.Text.Json;
 using application.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
+using Serilog.Context;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +22,14 @@ public static class ConfigureServices
                 {
                     var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
 
+                    using (LogContext.PushProperty("LogProperty", new
+                           {
+                                modelState = JsonSerializer.Serialize(context.ModelState)
+                           }))
+                    {
+                        logger.LogError("모델 바인딩 및 유효성 검사 중 오류 발생");
+                    }
+                    
                     // Perform logging here.
                     // ...
 
