@@ -1,25 +1,6 @@
 version: "3.9"
 
 services:
-  api:
-    image: aspnetcore-base-project
-    container_name: aspnetcore-base-project-api
-    build:
-      context: .
-      dockerfile: ./src/application/Dockerfile
-    ports:
-      - "5000:5000"
-    environment:
-      ASPNETCORE_ENVIRONMENT: Local
-      ASPNETCORE_URLS: "http://*:5000"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 2gb
-    volumes:
-      - ./log:/var/log
-    
   db:
     image: mysql:8.0.29-oracle
     container_name: aspnetcore-base-project-mysql

@@ -9,6 +9,8 @@ builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Host.UseSerilog();
 
+// builder.Host.ConfigureAppConfiguration();
+
 builder.Services.AddSingleton<SingletonService>();
 
 builder.Services.AddScoped<ScopedService>();

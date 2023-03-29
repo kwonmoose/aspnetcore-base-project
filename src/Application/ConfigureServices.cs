@@ -1,6 +1,7 @@
 
 using System.Reflection;
 using System.Text.Json;
+using Amazon.SecretsManager;
 using application.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
@@ -64,6 +65,28 @@ public static class ConfigureServices
                 }, 
                 tags: new [] {"lambda"}
             );
+
+        #endregion
+
+        #region AWS Setting
+
+        services.AddDefaultAWSOptions(configuration.GetAWSOptions());
+        
+        // if (serverEnvironment.IsLocal())
+        // {
+        //     services.AddSingleton<IAmazonSQS>(p =>
+        //     {
+        //         return new AmazonSQSClient(new AmazonSQSConfig()
+        //         {
+        //             ServiceURL = $"{configuration["AWSServiceConfiguration:Local:Ip"]}:{configuration["AWSServiceConfiguration:Local:Port:SQS"]}",
+        //             UseHttp = true
+        //         });
+        //     });
+        // }
+        // else
+        // {
+        services.AddAWSService<IAmazonSecretsManager>();
+        // }
 
         #endregion
         
