@@ -5,11 +5,16 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var serverEnvironment = (ServerEnvironment)Enum.Parse(typeof(ServerEnvironment), builder.Configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value);
+
+if (serverEnvironment.IsDevelopment())
+{
+    builder.Configuration.AddSecretsManager("ap-northeast-2", "kwonmoose/dev/aspnetcore-base-project");   
+}
+
 builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Host.UseSerilog();
-
-// builder.Host.ConfigureAppConfiguration();
 
 builder.Services.AddSingleton<SingletonService>();
 
@@ -18,7 +23,6 @@ builder.Services.AddScoped<ScopedService>();
 builder.Services.AddTransient<TransientService>();
 
 var app = builder.Build();
-var serverEnvironment = (ServerEnvironment)Enum.Parse(typeof(ServerEnvironment), app.Environment.EnvironmentName);
 
 // Configure the HTTP request pipeline.
 if (serverEnvironment.IsLocal() || serverEnvironment.IsDevelopment())

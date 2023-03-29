@@ -3,6 +3,8 @@ using System.Reflection;
 using System.Text.Json;
 using Amazon.SecretsManager;
 using application.HealthChecks;
+using Domain.Enums;
+using Domain.Settings;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Serilog.Context;
@@ -13,6 +15,8 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        var serverEnvironment = (ServerEnvironment)Enum.Parse(typeof(ServerEnvironment), configuration.GetSection("ASPNETCORE_ENVIRONMENT").Value);
+        
         services.AddControllers()
             .ConfigureApiBehaviorOptions(options =>
             {
@@ -99,8 +103,19 @@ public static class ConfigureServices
             .CreateLogger();
 
         #endregion
-
         
+        var kwonMooseAccountsConnection = configuration.GetConnectionString("KwonMooseAccountsConnection");
+            
+        // Local 환경일 경우에는 appsettings 파일에서 설정값을 가져오고 GetSection 함수로 Key 설정을 해줘야함
+        services.Configure<ConnectionStrings>(configuration.GetSection("ConnectionStrings"));
+        
+        // services.AddDbContextPool<KwonMooseAccountsContext>(options =>
+        // {
+        //     options.UseMySql(kwonMooseAccountsConnection, ServerVersion.AutoDetect(kwonMooseAccountsConnection));
+        // }); 
+        
+        
+
         return services;
     }
 }

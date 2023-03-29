@@ -1,7 +1,9 @@
+using System.Text.Json;
 using Amazon;
 using Amazon.SecretsManager;
-using Amazon.SecretsManager.Extensions.Caching;
+using Domain.Settings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace application.Controllers;
 
@@ -15,65 +17,18 @@ public class AwsServiceController : ControllerBase
     // Log
     private readonly ILogger<AwsServiceController> _logger;
 
-    private readonly IAmazonSecretsManager _amazonSecretsManager;
+    private readonly ConnectionStrings _connectionStrings;
 
-    public AwsServiceController(ILogger<AwsServiceController> logger, IAmazonSecretsManager amazonSecretsManager)
+    public AwsServiceController(ILogger<AwsServiceController> logger, IOptions<ConnectionStrings> connectionStrings)
     {
         _logger = logger;
 
-        _amazonSecretsManager = amazonSecretsManager;
+        _connectionStrings = connectionStrings.Value;
     }
     
     [HttpGet("secrets-manager")]
     public async Task<IActionResult> GetSecretsManager()
     {
-        SecretCacheConfiguration cacheConfiguration = new SecretCacheConfiguration
-        {
-            CacheItemTTL = 20000, // 20 seconds
-            VersionStage = "AWSCURRENT",
-        };
-
-        SecretsManagerCache cache = new SecretsManagerCache(_amazonSecretsManager, cacheConfiguration);
-
-        try
-        {
-            var value = await cache.GetSecretString("kwonmoose/local/aspnetcore-base-project");
-
-            Console.WriteLine(value);
-        }
-        catch (Exception ex)
-        {
-    
-        }
-
-        // string secretName = "kwonmoose/local/db/accounts";
-        // string region = "ap-northeast-2";
-        //
-        // IAmazonSecretsManager client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region));
-        //
-        // GetSecretValueRequest request = new GetSecretValueRequest
-        // {
-        //     SecretId = secretName,
-        //     VersionStage = "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified.
-        // };
-        //
-        // GetSecretValueResponse response;
-        //
-        // try
-        // {
-        //     response = await client.GetSecretValueAsync(request);
-        // }
-        // catch (Exception e)
-        // {
-        //     // For a list of the exceptions thrown, see
-        //     // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-        //     throw e;
-        // }
-        //
-        // string secret = response.SecretString;
-
-
-
-        return Ok();
+        return Ok(JsonSerializer.Serialize(_connectionStrings));
     }
 }
